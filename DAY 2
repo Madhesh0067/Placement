@@ -1,0 +1,55 @@
+def longest_palindromic_substring_length(n, s):
+    """
+    Parameters:
+        n (int): Length of the string
+        s (str): The input string
+    Returns:
+        int: Length of the longest palindromic substring
+    """
+    # Preprocess string to handle even-length palindromes
+    t = '#' + '#'.join(s) + '#'
+    m = len(t)
+    p = [0] * m
+    c = 0  # center of the current palindrome
+    r = 0  # right boundary of the current palindrome
+    max_len = 0
+
+    for i in range(m):
+        mirr = 2*c - i  # mirror of i around center c
+
+        if i < r:
+            p[i] = min(r - i, p[mirr])
+
+        # Expand around center i
+        a = i + p[i] + 1
+        b = i - p[i] - 1
+        while a < m and b >= 0 and t[a] == t[b]:
+            p[i] += 1
+            a += 1
+            b -= 1
+
+        # Update center and right boundary if expanded past r
+        if i + p[i] > r:
+            c = i
+            r = i + p[i]
+
+        max_len = max(max_len, p[i])
+
+    return max_len
+
+
+def main():
+    import sys
+    input = sys.stdin.read
+    data = input().strip().split()
+    
+    n = int(data[0])  # First input is the integer N
+    s = data[1]       # Second input is the string S
+    
+    # Call user logic function and print the output
+    result = longest_palindromic_substring_length(n, s)
+    print(result)
+
+
+if __name__ == "__main__":
+    main()
